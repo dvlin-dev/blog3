@@ -6,7 +6,7 @@ import { getAllFilesFrontmatter } from '@/lib/mdx';
 export async function getRssXml() {
   const frontmatters = await getAllFilesFrontmatter('blog');
 
-  const blogUrl = 'https://yangchaoyi.vip/blog';
+  const blogUrl = 'https://blog.dvlin.com/blog';
 
   const itemXml = frontmatters
     .filter((fm) => !fm.slug.startsWith('id-'))

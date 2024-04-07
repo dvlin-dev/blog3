@@ -26,7 +26,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   React.useEffect(() => {
     if (
       window.location.host !==
-        (process.env.NEXT_PUBLIC_BLOCK_DOMAIN_WHITELIST || 'yangchaoyi.vip') &&
+        (process.env.NEXT_PUBLIC_BLOCK_DOMAIN_WHITELIST || 'blog.dvlin.com') &&
       blockDomainMeta
     ) {
       if (getFromLocalStorage('incrementMetaFlag') !== 'false') {

@@ -4,7 +4,7 @@
  */
 module.exports = {
   /** Without additional '/' on the end */
-  siteUrl: 'https://yangchaoyi.vip',
+  siteUrl: 'https://blog.dvlin.com',
   generateRobotsTxt: true,
   generateIndexSitemap: false,
   robotsTxtOptions: {

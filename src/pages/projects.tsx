@@ -2,11 +2,8 @@ import clsx from 'clsx';
 
 import useLoaded from '@/hooks/useLoaded';
 
-import ProjectCard from '@/components/content/projects/ProjectCard';
 import Layout from '@/components/layout/Layout';
 import Seo from '@/components/Seo';
-
-import { PROJECTS_ATOM } from '@/constants/projects';
 
 export default function ProjectsPage() {
   const isLoaded = useLoaded();
@@ -26,7 +23,8 @@ export default function ProjectsPage() {
                 Showcase of my projects on front-end development that I'm proud
                 of.
               </p>
-              {PROJECTS_ATOM?.map((project, index) => (
+              {/* TODO */}
+              {/* {PROJECTS_ATOM?.map((project, index) => (
                 <div key={project.category}>
                   <h1
                     className='text-[18px] text-[#555] dark:text-[#aaa]'
@@ -36,7 +34,7 @@ export default function ProjectsPage() {
                   </h1>
                   <ProjectCard project={project} />
                 </div>
-              ))}
+              ))} */}
             </div>
           </div>
         </section>

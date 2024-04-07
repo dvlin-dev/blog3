@@ -134,9 +134,9 @@ const footerLinks: { href: string; text: string; tooltip: React.ReactNode }[] =
     //   tooltip: 'Note collection of books that I read',
     // },
     // {
-    //   href: 'https://analytics.umami.is/share/gmqt0gLnaqPGkpoF/yangchaoyi.vip',
+    //   href: 'https://analytics.umami.is/share/gmqt0gLnaqPGkpoF/blog.dvlin.com',
     //   text: 'Analytics',
-    //   tooltip: 'yangchaoyi.vip views and visitors analytics',
+    //   tooltip: 'blog.dvlin.com views and visitors analytics',
     // },
     // // {
     // //   href: '/statistics',
@@ -155,9 +155,9 @@ const footerLinks: { href: string; text: string; tooltip: React.ReactNode }[] =
     //   tooltip: 'Get an email whenever I post, no spam',
     // },
     // {
-    //   href: 'https://yangchaoyi.vip/rss.xml',
+    //   href: 'https://blog.dvlin.com/rss.xml',
     //   text: 'RSS',
-    //   tooltip: 'Add yangchaoyi.vip blog to your feeds',
+    //   tooltip: 'Add blog.dvlin.com blog to your feeds',
     // },
   ];
 

@@ -28,7 +28,7 @@ class MyDocument extends Document {
             defer
             data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID || ''}
             src='https://analytics.umami.is/script.js'
-            data-domains='yangchaoyi.vip'
+            data-domains='blog.dvlin.com'
           />
         </Head>
         <body>
