@@ -46,7 +46,7 @@ export default function IndexPage({
   const [isEnglish, setIsEnglish] = React.useState<boolean>(false);
   const isLoaded = useLoaded();
 
-  const populatedPosts = useInjectContentMeta('blog', posts);
+  const populatedPosts = useInjectContentMeta('jottings', posts);
 
   //#region  //*=========== Search ===========
   const [search, setSearch] = React.useState<string>('');
@@ -120,7 +120,7 @@ export default function IndexPage({
   return (
     <Layout>
       <Seo
-        templateTitle='Blog'
+        templateTitle='jottings'
         description='Thoughts, mental models, and tutorials about front-end development. Rebuild your mental model so front-end development can be predictable.'
       />
 
@@ -128,7 +128,7 @@ export default function IndexPage({
         <section className={clsx(isLoaded && 'fade-in-start')}>
           <div className='layout py-12'>
             <h1 className='text-3xl md:text-5xl' data-fade='0'>
-              <Accent>Blog {!isEnglish && 'Chinese'}</Accent>
+              <Accent>jottings {!isEnglish && 'Chinese'}</Accent>
             </h1>
             <p className='mt-2 text-gray-600 dark:text-gray-300' data-fade='1'>
               Thoughts, mental models, and tutorials about front-end
@@ -188,7 +188,7 @@ export default function IndexPage({
                     key={post.slug}
                     post={post}
                     checkTagged={checkTagged}
-                    type='blog'
+                    type='jottings'
                   />
                 ))
               ) : (
@@ -204,7 +204,7 @@ export default function IndexPage({
 }
 
 export async function getStaticProps() {
-  const files = await getAllFilesFrontmatter('blog');
+  const files = await getAllFilesFrontmatter('jottings');
   const posts = sortByDate(files);
 
   // Accumulate tags and remove duplicate

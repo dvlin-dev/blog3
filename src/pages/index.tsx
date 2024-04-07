@@ -83,6 +83,15 @@ export default function HomePage({
                     To Blog
                   </CustomLink>
                   <CustomLink
+                    href='/jottings'
+                    className='ml-6'
+                    onClick={() =>
+                      trackEvent('Home: See more project', { type: 'navigate' })
+                    }
+                  >
+                    To Jottings
+                  </CustomLink>
+                  <CustomLink
                     href='/projects'
                     className='ml-6'
                     onClick={() =>
@@ -112,6 +121,7 @@ export default function HomePage({
                       key={post.slug}
                       post={post}
                       className={clsx(i > 2 && 'hidden sm:block')}
+                      type='blog'
                     />
                   ))}
                 </ul>

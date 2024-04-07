@@ -34,7 +34,7 @@ type SingleBlogPageProps = {
   recommendations: BlogFrontmatter[];
 } & BlogType;
 
-export default function SingleBlogPage({
+export default function SingleJottingsPage({
   code,
   frontmatter,
   recommendations,
@@ -46,8 +46,8 @@ export default function SingleBlogPage({
     recommendations
   );
 
-  const COMMIT_HISTORY_LINK = `https://github.com/bowling00/blog/commits/main/src/contents/blog/${frontmatter.slug}.mdx`;
-  const GITHUB_EDIT_LINK = `https://github.com/bowling00/blog/blob/main/src/contents/blog/${frontmatter.slug}.mdx`;
+  const COMMIT_HISTORY_LINK = `https://github.com/bowling00/blog/commits/main/src/contents/jottings/${frontmatter.slug}.mdx`;
+  const GITHUB_EDIT_LINK = `https://github.com/bowling00/blog/blob/main/src/contents/jottings/${frontmatter.slug}.mdx`;
   const OG_BANNER_LINK = `https://res.cloudinary.com/bowling00/image/upload/f_auto,c_fill,ar_4:5,w_1200/bowling00/banner/${frontmatter.banner}`;
 
   const cleanSlug = cleanBlogPrefix(frontmatter.slug);
@@ -166,7 +166,7 @@ export default function SingleBlogPage({
               </div>
               {frontmatter?.zhAndEn && (
                 <CustomLink
-                  href={`/blog/${isEnglish ? 'en-' : ''}${cleanSlug}`}
+                  href={`/jottings/${isEnglish ? 'en-' : ''}${cleanSlug}`}
                   className='mt-4'
                 >
                   Read in {isEnglish ? 'Chinese' : 'English'}
@@ -220,7 +220,7 @@ export default function SingleBlogPage({
                       className={clsx({ 'hidden xl:block': i === 2 })}
                       key={post.slug}
                       post={post}
-                      type='blog'
+                      type='jottings'
                     />
                   ))}
                 </ul>
@@ -233,7 +233,7 @@ export default function SingleBlogPage({
               <CustomLink href={GITHUB_EDIT_LINK}>
                 Edit this on GitHub
               </CustomLink>
-              <CustomLink href='/blog'>← Back to blog</CustomLink>
+              <CustomLink href='/jottings'>← Back to jottings</CustomLink>
             </div>
           </div>
         </section>
@@ -242,7 +242,7 @@ export default function SingleBlogPage({
   );
 }
 export const getStaticPaths: GetStaticPaths = async () => {
-  const posts = await getFiles('blog');
+  const posts = await getFiles('jottings');
 
   return {
     paths: posts.map((p) => ({
@@ -256,7 +256,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const post = await getFileBySlug('blog', params?.slug as string);
+  const post = await getFileBySlug('jottings', params?.slug as string);
 
   const recommendations = await getRecommendations(params?.slug as string);
 

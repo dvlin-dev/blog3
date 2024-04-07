@@ -57,8 +57,9 @@ export default function IndexPage({
 }
 
 export async function getStaticProps() {
-  const files = await getAllFilesFrontmatter('blog');
-  const posts = sortByDate(files);
+  const blogFiles = await getAllFilesFrontmatter('blog');
+  const jottingsFiles = await getAllFilesFrontmatter('jottings');
+  const posts = sortByDate([...blogFiles, ...jottingsFiles]);
 
   return { props: { posts } };
 }

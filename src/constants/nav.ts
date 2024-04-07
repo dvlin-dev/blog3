@@ -13,6 +13,10 @@ export const NAV_ATOM = [
     link: '/blog',
   },
   {
+    name: 'jottings',
+    link: '/jottings',
+  },
+  {
     name: 'Archives',
     link: '/archives',
   },

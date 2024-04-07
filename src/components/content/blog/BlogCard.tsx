@@ -13,13 +13,15 @@ import { BlogFrontmatter, InjectedMeta } from '@/types/frontmatters';
 type BlogCardProps = {
   post: BlogFrontmatter & InjectedMeta;
   checkTagged?: (tag: string) => boolean;
+  type: 'blog' | 'jottings';
 } & React.ComponentPropsWithoutRef<'li'>;
 
-export default function BlogCard({
+export default function ArticleCard({
   post,
   className,
   checkTagged,
   onClick,
+  type,
 }: BlogCardProps) {
   return (
     <li
@@ -35,7 +37,7 @@ export default function BlogCard({
     >
       <UnstyledLink
         className='block h-full rounded-md focus:outline-none focus-visible:ring focus-visible:ring-primary-300'
-        href={`/blog/${post.slug}`}
+        href={`/${type}/${post.slug}`}
       >
         <div className='relative'>
           <CloudinaryImg

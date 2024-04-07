@@ -86,8 +86,9 @@ export async function getAllFilesFrontmatter<T extends ContentType>(type: T) {
 }
 
 export async function getRecommendations(currSlug: string) {
-  const frontmatters = await getAllFilesFrontmatter('blog');
-
+  const blogFrontmatters = await getAllFilesFrontmatter('blog');
+  const jottingsFrontmatters = await getAllFilesFrontmatter('jottings');
+  const frontmatters = [...blogFrontmatters, ...jottingsFrontmatters];
   // Get current frontmatter
   const currentFm = frontmatters.find((fm) => fm.slug === currSlug);
 

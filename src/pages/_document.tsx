@@ -23,6 +23,7 @@ class MyDocument extends Document {
             type='font/woff2'
             crossOrigin='anonymous'
           />
+          {/* TODO */}
           <script
             async
             defer
