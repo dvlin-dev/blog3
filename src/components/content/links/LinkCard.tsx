@@ -36,8 +36,8 @@ const LinkCard: React.FC<ILinkProps> = ({
               className='pointer-events-none overflow-hidden rounded-t-md'
               url={`links/${banner}`}
               alt='photo'
-              width={1320}
-              height={742.5}
+              width={1100}
+              height={618.75}
               aspect={{ height: 2, width: 5 }}
               preview={false}
             />
@@ -68,8 +68,8 @@ const LinkCard: React.FC<ILinkProps> = ({
               className='pointer-events-none overflow-hidden rounded-full h-12 w-12 ring-2 ring-neutral-300'
               url={`links/avatar/${avatar}`}
               alt='photo'
-              width={1320}
-              height={742.5}
+              width={1100}
+              height={618.75}
               aspect={{ height: 1, width: 1 }}
               preview={false}
             />

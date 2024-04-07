@@ -98,8 +98,8 @@ export default function SingleBlogPage({
               <CloudinaryImg
                 url={frontmatter.banner}
                 alt='photo'
-                width={1320}
-                height={742.5}
+                width={1100}
+                height={618.75}
                 aspect={{ height: 9, width: 16 }}
               />
               <h1 className='mt-4'>{frontmatter.title}</h1>

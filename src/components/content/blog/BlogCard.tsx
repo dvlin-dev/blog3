@@ -45,8 +45,8 @@ export default function ArticleCard({
             className='pointer-events-none overflow-hidden rounded-t-md'
             url={post.banner}
             alt='photo'
-            width={1320}
-            height={742.5}
+            width={1100}
+            height={618.75}
             aspect={{ height: 2, width: 5 }}
             preview={false}
           />
