@@ -98,8 +98,8 @@ export default function SingleJottingsPage({
               <CloudinaryImg
                 url={frontmatter.banner}
                 alt='photo'
-                width={1600}
-                height={900}
+                width={1320}
+                height={742.5}
                 aspect={{ height: 9, width: 16 }}
               />
 
