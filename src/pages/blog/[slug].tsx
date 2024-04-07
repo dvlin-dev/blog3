@@ -96,11 +96,11 @@ export default function SingleBlogPage({
           <div className='layout'>
             <div className='pb-4 dark:border-gray-600'>
               <CloudinaryImg
-                publicId={`banner/${frontmatter.banner}`}
-                alt={`Photo from unsplash: ${frontmatter.banner}`}
-                width={1400}
-                height={(1400 * 2) / 5}
-                aspect={{ height: 2, width: 5 }}
+                url={frontmatter.banner}
+                alt='photo'
+                width={1600}
+                height={900}
+                aspect={{ height: 9, width: 16 }}
               />
 
               <h1 className='mt-4'>{frontmatter.title}</h1>

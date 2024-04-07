@@ -43,7 +43,7 @@ export default function ArticleCard({
           <CloudinaryImg
             noStyle
             className='pointer-events-none overflow-hidden rounded-t-md'
-            publicId={`banner/${post.banner}`}
+            url={post.banner}
             alt='Photo taken from unsplash'
             width={1200}
             height={(1200 * 2) / 5}

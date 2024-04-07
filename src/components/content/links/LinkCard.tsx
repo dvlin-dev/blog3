@@ -34,7 +34,7 @@ const LinkCard: React.FC<ILinkProps> = ({
             <CloudinaryImg
               noStyle
               className='pointer-events-none overflow-hidden rounded-t-md'
-              publicId={`links/${banner}`}
+              url={`links/${banner}`}
               alt='Photo taken from unsplash'
               width={1200}
               height={(1200 * 2) / 5}
@@ -66,7 +66,7 @@ const LinkCard: React.FC<ILinkProps> = ({
             <CloudinaryImg
               noStyle
               className='pointer-events-none overflow-hidden rounded-full h-12 w-12 ring-2 ring-neutral-300'
-              publicId={`links/avatar/${avatar}`}
+              url={`links/avatar/${avatar}`}
               alt='Photo taken from unsplash'
               width={1200}
               height={1200}

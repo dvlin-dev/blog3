@@ -5,6 +5,6 @@ module.exports = {
   },
 
   images: {
-    domains: ['res.cloudinary.com'],
+    domains: ['dvlin.oss-cn-beijing.aliyuncs.com'],
   },
 };

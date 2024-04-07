@@ -1,4 +1,3 @@
-import { buildUrl } from 'cloudinary-build-url';
 import clsx from 'clsx';
 import Image from 'next/image';
 import * as React from 'react';
@@ -6,8 +5,8 @@ import Lightbox from 'react-image-lightbox';
 
 import 'react-image-lightbox/style.css';
 
-type CloudinaryImgType = {
-  publicId: string;
+type ImgCardType = {
+  url: string;
   height: string | number;
   width: string | number;
   alt: string;
@@ -22,8 +21,8 @@ type CloudinaryImgType = {
   mdx?: boolean;
 } & React.ComponentPropsWithoutRef<'figure'>;
 
-export default function CloudinaryImg({
-  publicId,
+export default function ImgCard({
+  url,
   height,
   width,
   alt,
@@ -35,34 +34,9 @@ export default function CloudinaryImg({
   style,
   aspect,
   ...rest
-}: CloudinaryImgType) {
+}: ImgCardType) {
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
-  // TODO
-  const urlBlurred = buildUrl(publicId, {
-    cloud: {
-      cloudName: 'dvlin',
-    },
-    transformations: {
-      effect: {
-        name: 'blur:1000',
-      },
-      quality: 1,
-      rawTransformation: aspect
-        ? `c_fill,ar_${aspect.width}:${aspect.height},w_${width}`
-        : undefined,
-    },
-  });
-  const url = buildUrl(publicId, {
-    cloud: {
-      cloudName: 'dvlin',
-    },
-    transformations: {
-      rawTransformation: aspect
-        ? `c_fill,ar_${aspect.width}:${aspect.height},w_${width}`
-        : undefined,
-    },
-  });
   const aspectRatio = aspect ? aspect.height / aspect.width : undefined;
 
   return (
@@ -90,18 +64,6 @@ export default function CloudinaryImg({
         className='img-blur'
         onClick={preview ? () => setIsOpen(true) : undefined}
       >
-        <style jsx>{`
-          .img-blur::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            filter: blur(20px);
-            z-index: 0;
-            background-image: url(${urlBlurred});
-            background-position: center center;
-            background-size: 100%;
-          }
-        `}</style>
         <div className='absolute left-0 top-0'>
           <Image
             width={+width}
