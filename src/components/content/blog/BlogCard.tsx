@@ -44,7 +44,7 @@ export default function ArticleCard({
             noStyle
             className='pointer-events-none overflow-hidden rounded-t-md'
             url={post.banner}
-            alt='Photo taken from unsplash'
+            alt='photo'
             width={1320}
             height={742.5}
             aspect={{ height: 2, width: 5 }}

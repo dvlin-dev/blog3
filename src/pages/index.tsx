@@ -148,9 +148,9 @@ export async function getStaticProps() {
   const blogs = await getAllFilesFrontmatter('blog');
 
   const featuredPosts = getFeatured(blogs, [
-    'tech-vol-001',
-    'tech-vol-002',
     'tech-vol-003',
+    'tech-vol-002',
+    'tech-vol-001',
   ]);
 
   return {
