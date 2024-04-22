@@ -1,0 +1,697 @@
+---
+title: SSR
+description: What is ssr ?
+publishedAt: '2024-04-27'
+lastUpdated: '2024-04-27'
+banner: https://dvlin.oss-cn-beijing.aliyuncs.com/1%E5%8E%8B%E7%BC%A9/jianpan.jpg
+tags: 'tech'
+---
+# 什么是 SSR
+> react 19 即将发布，这次的重头戏是 RSC(React Server Components)，想要学习 RSC 自然绕不开 SSR(Server Side Rendering)，让我们先来了解一下 SSR。
+
+在React的使用中，有几种不同的渲染方式，主要包括客户端渲染（CSR）、服务器端渲染（SSR）、静态站点生成（SSG）和增量静态生成（ISR）。本次主要介绍 CSR 和 SSR 。
+
+我们最常用的是客户端渲染（CSR），即在浏览器中加载JavaScript文件，然后在客户端渲染页面。
+
+CSR 加载出来的页面往往是这样的
+
+```html
+<!DOCTYPE html>
+<title>dvlin</title>
+<meta property="og:url"         content="http://dvlin.com" />
+<meta property="og:title"       content="dvlin" />
+<meta property="og:description" content="dvlin description" />
+<meta property="og:image"       content="https://xx.png" />
+<div id="root"></div>
+<script src="bundle.js"></script>
+```
+服务器吐出来的仅有一个 root 节点，然后通过 bundle.js 来渲染页面。
+seo 全靠 title 和 meta 标签。
+
+为了更好的 seo 和首屏加载速度，我们自然希望服务器吐出来的就是完整的页面，这就是 SSR。
+
+服务器端渲染（SSR）是在服务器端生成HTML，然后将HTML发送到浏览器。这种方式的优点是首屏加载速度快，利于SEO。但也增长了服务端的压力。
+<img src='https://dvlin.oss-cn-beijing.aliyuncs.com/blog/csrvssr.png' />
+
+在那遥远的时代，前后端还未分离时，就是天然的服务端渲染。
+
+java 时代的 jsp，nodejs 时代的 ejs，php ...，这些都是服务端渲染。
+
+做为前端，我们用最熟悉的 nodejs 来跑一个最简单的 SSR。
+
+```js
+// app.js
+const express = require('express');
+const app = express();
+
+// 设置模板引擎
+app.engine("art", require("express-art-template"));
+
+// 设置模板的路径
+app.set('views', __dirname + '/views');
+
+app.set('view engine', 'art');
+
+app.get('/', (_req, res) => {
+    res.render('index', {
+        title: 'Hello SSR',
+        message: 'good good'
+    });
+});
+
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
+```
+
+```html
+<!-- views/index.art -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{title}}</title>
+</head>
+<body>
+    <h1>{{title}}</h1>
+    <p>{{message}}</p>
+</body>
+</html>
+```
+通过 `node app.js` 启动服务，访问 `http://localhost:3000`，页面就会显示出 `Hello SSR` 和 `good good`。
+
+<img src='https://dvlin.oss-cn-beijing.aliyuncs.com/blog/ex-ssr.png' />
+
+服务端返回的网页代码为
+```html
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello SSR</title>
+</head>
+<body>
+    <h1>Hello SSR</h1>
+    <p>good good</p>
+</body>
+</html>
+```
+> 具体代码：https://github.com/bowling00/playground/tree/ssr-00
+
+这就是一个最简单的 SSR 案例，通过模板引擎将数据渲染到页面中。
+
+回忆起大一和大二时还未学习 react、vue，当时就是用的这套方案，写的学校项目。
+
+<img src='https://dvlin.oss-cn-beijing.aliyuncs.com/blog/gitee-dangfeng.png' />
+
+当然，现在的前端开发，更多的是前后端分离，前端负责页面渲染，后端负责数据接口。
+也有了 react、vue 等框架，我们可以通过这些框架来实现 SSR。
+
+# react-ssr
+
+## 最小 SSR
+
+```shell
+.
+├── src
+│   ├── App.tsx
+│   └── server
+│       └── index.tsx
+├── package.json
+├── pnpm-lock.yaml
+├── tsconfig.json
+└── webpack.config.js
+```
+主要文件是 App.tsx 和 server/index.tsx，具体代码如下：（其余文件可自行查看代码仓库，由于文章篇幅问题，不再展示）
+> 具体代码：https://github.com/bowling00/playground/tree/ssr-01
+
+1. 首先我们定义一个 `App.tsx` 组件
+```tsx
+// src/App.tsx
+const App = () => {
+  return <div><h1>SSR good good</h1></div>;
+};
+export default App;
+```
+2. 然后通过 `react-dom/server` 的 `renderToString` 方法将 `App` 组件渲染成字符串
+```tsx
+// src/server/index.tsx
+import Koa from 'koa';
+import { renderToString } from 'react-dom/server';
+import App from '../App';
+
+const app = new Koa();
+
+app.use(async (ctx) => {
+    const html = renderToString(<App />);
+    ctx.body = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>React SSR Example</title>
+    </head>
+    <body>
+      <div id="root">${html}</div>
+    </body>
+    </html>
+  `;
+});
+app.listen(3000, () => {
+    console.log('Server is running on http://localhost:3000');
+});
+```
+3. 最后通过启动服务，访问 `http://localhost:3000`，页面就会显示出 `Hello from React SSR!`。
+
+服务端返回的网页代码为
+```html
+  <!DOCTYPE html>
+    <html>
+    <head>
+      <title>React SSR Example</title>
+    </head>
+    <body>
+      <div id="root"><div><h1>Hello from React SSR!</h1></div></div>
+    </body>
+    </html>
+```
+
+## 同构
+### 同构在干嘛
+前面的 SSR 是不完整的，在开发的过程中常常会有一些事件绑定，比如加一个 input
+```tsx
+const App = () => {
+  return <div><input type="text" onFocus={()=>console.info('我被 focus 啦')} /></div>;
+};
+
+export default App;
+```
+
+再试一下，你会发现 `onFocus` 事件并没有触发，这是为什么呢？
+
+因为 `react-dom/server` 下的 `renderToString` 并没有做事件相关的处理，因此返回给浏览器的内容不会有事件绑定。
+
+为了解决这个问题，就要引入同构了，即一套 react 代码在服务器上跑一遍，到达浏览器时再跑一遍。服务端渲染完成页面结构，浏览器端渲染完成事件绑定。
+
+于是我们在 html 中引入客户端的 js 文件，通过 `hydrate` 方法来完成事件绑定。
+
+```tsx
+import ReactDom from 'react-dom';
+import App from '../App';
+
+ReactDom.hydrate(<App />, document.getElementById('root'))
+```
+然后通过 webpack 打包，将打包后的文件引入到 html 中。
+>篇幅问题，下文中所有的代码都在这：https://github.com/bowling00/playground/tree/ssr-02
+
+```html
+<html lang="zh-cn">
+<head>
+  <meta charSet="utf-8" />
+</head>
+<body>
+   <div id="root">
+   <script src="/public/main.js"></script>
+</body>
+</html>
+```
+
+<img src='https://dvlin.oss-cn-beijing.aliyuncs.com/blog/focus.png' />
+
+就会被成功的 focus 了。
+### 同构路由
+在客户端中，我们通常使用 `react-router-dom` 来实现路由
+
+```tsx
+// routes.tsx
+import Home from '@/pages/Home'
+import Login from '@/pages/Login'
+
+export default (
+  <div>
+    <Route path='/' exact component={Home}></Route>
+    <Route path='/login' exact component={Login}></Route>
+  </div>
+)
+```
+
+```tsx
+// App.tsx
+import React from 'react';
+import ReactDom from 'react-dom';
+import { BrowserRouter } from 'react-router-dom'
+import Routes from '../Routes'
+
+const App = () => {
+  return (
+    <BrowserRouter>
+      {Routes}
+    </BrowserRouter>
+  )
+}
+ReactDom.hydrate(<App />, document.getElementById('root'))
+```
+
+此时，我们在浏览器中访问 `http://localhost:3000/login`，页面会报错，因为在服务端我们也需要对路由做处理。
+
+在服务端中，我们可以通过 `StaticRouter` 来实现路由
+
+```tsx
+// src/server/index.tsx
+import Koa from 'koa';
+import routes from '../routes'
+import { renderToString } from 'react-dom/server';
+import { StaticRouter } from 'react-router-dom'; 
+import App from '../App';
+
+const app = new Koa();
+
+app.use(async (ctx) => {
+    const html = renderToString(
+      <StaticRouter location={req.path} >
+        {Routes}
+      </StaticRouter>
+    );
+    ctx.body = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>React SSR Example</title>
+    </head>
+    <body>
+      <div id="root">${html}</div>
+    </body>
+    </html>
+  `;
+});
+app.listen(3000, () => {
+    console.log('Server is running on http://localhost:3000');
+});
+```
+页面的路由跳转就没问题了
+
+### 异构？
+在 ssr 场景有很多复杂的因素，同构并不是银弹，有时候我们需要异构。
+
+在飞书文档的 SSR 中，就是用了异构的方式，服务端渲染完成后。
+客户端中再次渲染并将服务端渲染的内容替换掉。
+这样服务端渲染的逻辑会简化很多，首屏只用保证页面的文字数据和布局正确展示即可，减轻了服务器的压力，也便于运维操作。
+此外飞书文档的截图是在服务端进行的，想必异构也有这方面的考虑。
+> 具体的调试方法：打开 slow 3g，在页面出来的一瞬间 offline, 此时的页面就只有文字和布局，是不可交互的
+
+## 流式渲染
+
+此时我们的 SSR 已经有了一些基本的功能。接下来我们对 SSR 的渲染进行优化。
+
+在 SSR 中，我们通常会遇到一个问题，就是等待所有的数据在服务器上加载后再发送 HTML。这样会导致页面加载时间过长，用户体验不好。
+
+在 React 18 中针对 SSR 的更新：
+
+1、流式 HTML 响应。流式 HTML 响应可以让服务端尽快的产出 HTML 给客户端，加快了服务端的响应，让页面尽快的展现给用户。
+
+2、选择性的 hyration。选择性的 hyration 可让应用在 HTML 和 JavaScript 代码的其余部分完全下载之前尽早开始为页面 hydrate。它还优先为用户正在与之交互的部分 hydrate，从而产生即时补水的错觉。如此种种都可以加快页面可交互时间。
+
+话不多直接上代码：
+
+首先我们要在 html 中引入所有打包好的 css、js 文件, 让服务端返回的代码就有样式和交互。
+
+在使用 webpack 打包时，我们可以在打包命令后面加上 `--profile --json=compilation-stats.json`, 这样就会生成一个 `compilation-stats.json` 文件，里面包含了打包的所有信息，包括打包的 css 和 js 文件。这样我们就可以将这些文件导入到 html 中。
+> https://webpack.js.org/api/stats/
+
+打包命令改动：
+`"dev:client": "cross-env SSR=true NODE_ENV=development  webpack --mode=development  --config webpack.client.js --watch --profile --json=compilation-stats.json"`
+
+服务端核心代码如下：
+```shell
+/server
+ ├── index.ts
+ ├── renderHTML.tsx
+ └── getTemplate.tsx
+```
+```ts
+// server/index.ts
+import { ReactNode } from 'react'
+import Koa, { Context } from 'koa'
+import { Writable } from 'stream'
+import path from 'path'
+import serve from 'koa-static'
+import mount from 'koa-mount'
+import { getStartTemplate, getEndTemplate } from './getTemplate'
+
+import { renderToPipeableStream } from 'react-dom/server'
+import fs from 'fs'
+import renderHTML from './renderHTML'
+
+const isDEV = process.env.NODE_ENV === 'development'
+// compilation-stats.json 为webpack打包信息产物
+const statsData = isDEV
+  ? {}
+  : JSON.parse(
+      fs.readFileSync(
+        path.join(process.cwd(), './compilation-stats.json'),
+        'utf-8'
+      )
+    )
+
+const publicPath = statsData.publicPath || ''
+const assetsJS: { [x: string]: string }[] = isDEV
+  ? [{ 'main.js': '/public/main.js' }]
+  : statsData.assets
+      .map((asset: { name: string; chunkNames: string[] }) => {
+        if (asset.name.endsWith('.js') && asset.chunkNames.includes('main'))
+          return { 'main.js': `${publicPath}${asset.name}` }
+        else if (asset.name.endsWith('.js'))
+          return { [asset.name]: `${publicPath}${asset.name}` }
+        else return null
+      })
+      .filter((p: any) => !!p)
+
+const assetsCSS = isDEV
+  ? [{ 'main.css': '/public/main.css' }]
+  : statsData.assets
+      .map((asset: { name: string; chunkNames: string[] }) => {
+        if (asset.name.endsWith('.css') && asset.chunkNames.includes('main'))
+          return { 'main.css': `${publicPath}${asset.name}` }
+        else if (asset.name.endsWith('.css'))
+          return { [asset.name]: `${publicPath}${asset.name}` }
+        else return null
+      })
+      .filter((p: any) => !!p)
+
+const app = new Koa()
+
+
+app.use(async (ctx, next) => {
+  try {
+    await next()
+  } catch (err) {
+    ctx.status = (err as any)?.status || 500
+    ctx.body = 'server error'
+    ctx.app.emit('error', err, ctx)
+  }
+})
+
+
+app.use(mount('/public', serve('./public-client')))
+
+const response = (
+  ctx: Context,
+  markup: ReactNode,
+  staticContext: { NOT_FOUND: boolean },
+) => {
+  return new Promise((resolve, reject) => {
+    let didError = false
+    const mainJs =
+      assetsJS.find((ass) => Object.keys(ass).includes('main.js'))?.[
+        'main.js'
+      ] ?? ''
+
+    const stream = new Writable({
+      write(chunk, _encoding, cb) {
+        ctx.res.write(chunk, cb)
+      },
+      final() {
+        ctx.res.end(getEndTemplate())
+        resolve('ctx.resolve')
+      },
+    })
+    // 将 html 分三段进行传输，分别为 startTemplate、 markup(react代码) 、endTemplate
+    const { pipe } = renderToPipeableStream(markup, {
+      bootstrapScripts: [mainJs],
+      onShellReady() {
+        ctx.res.setHeader('Content-type', 'text/html')
+        ctx.status = didError ? 500 : 200
+        if (staticContext.NOT_FOUND) {
+          ctx.status = 404
+        }
+
+        ctx.res.write(getStartTemplate({ assetsJS, assetsCSS }))
+
+        pipe(stream)
+      },
+      onShellError() {
+        ctx.status = 500
+        ctx.res.end('server error')
+      },
+      onError(err) {
+        didError = true
+        reject(err)
+      },
+    })
+  })
+}
+
+app.use(async (ctx) => {
+  if (ctx.accepts(ctx.header.accept?.split(',') ?? []) === 'text/html') {
+    const staticContext: { NOT_FOUND: boolean } = { NOT_FOUND: false }
+    const { markup } =
+      await renderHTML(ctx, staticContext)
+
+    if (markup) {
+      await response(
+        ctx,
+        markup,
+        staticContext,
+      )
+    }
+  }
+})
+
+app.on('error', (err) => {
+  console.error('server error', err)
+})
+
+const port = 5002
+
+app.listen(port, () => {
+  console.log(`ssr server is listening on ${port}`)
+})
+
+```
+
+```ts
+// server/renderHtml.ts
+import React, { ReactNode } from 'react'
+
+import { Context } from 'koa'
+import { matchRoutes } from 'react-router'
+import routes from '../routes'
+import App from '../App'
+
+const renderHTML = async (
+  ctx: Context,
+  staticContext: { NOT_FOUND: boolean }
+) => {
+  let markup: null | ReactNode = null
+
+  const matchedRoutes = matchRoutes(routes, ctx.request.path)
+
+  if (!matchedRoutes) staticContext.NOT_FOUND = true
+
+  try {
+    markup = (
+      <App />
+    )
+  } catch (error) {
+    console.log('renderHTML,', error)
+  }
+
+  return {
+    markup,
+  }
+}
+
+export default renderHTML
+```
+
+```ts
+// server/getTemplate.tsx
+export const getEndTemplate = () => {
+  return `</div>
+</html>`
+}
+
+export const getStartTemplate = ({
+  assetsCSS,
+  assetsJS,
+}: any) => {
+  return `
+  <html lang="zh-cn">
+  <head>
+    <meta charSet="utf-8" />
+    ${assetsCSS.reduce(
+      (acc: string, css: any) =>
+        acc +
+        ` <link
+    rel="preload"
+    href=${Object.values(css)[0] as string}
+    as="style"
+    data-tag="css-preload"
+  />`,
+      "",
+    )}
+
+    ${assetsJS.reduce(
+      (acc: string, js: any) =>
+        acc +
+        ` <link
+    rel="prefetch"
+    href=${Object.values(js)[0] as string}
+    as="script"
+    data-tag="js-prefetch"
+  />`,
+      "",
+    )}
+
+   
+    ${assetsCSS.reduce(
+      (acc: string, css: any) =>
+        acc +
+        ` <link
+        rel="stylesheet"
+    href=${Object.values(css)[0] as string}
+    data-tag="css-real"
+  />`,
+      "",
+    )}
+  </head>
+  <body>
+    <noscript><b>Enable JavaScript to run this app.</b></noscript>
+
+   <div id="root">`
+}
+```
+这样我们就实现了流式渲染，页面会在服务端渲染完成后就展示出来，而不是等待所有数据加载完成后再展示。
+> 这里代码比较多，需要花些时间去理解
+
+## redux（注水、脱水）
+
+在请求一些状态时，我们往往会将一些状态存储到 redux 这样的全局状态管理库中，在服务端和客服端前后执行两次的时候，状态会出现’抖动‘的情况，因为当你在服务器请求数据保存到 redux 之后，客服端初始化 redux 时，这时还为初始化状态。我们可以用注水、脱水两个过程解决这个问题。
+
+注水：在服务端请求数据并保存到 redux 中后，并将状态写到 TextArea 中，将其 `display: none`；
+
+脱水: 在客户端初始化 redux 时，将 TextArea 中的 redux 数据取出来，作为 redux 的初始化数据。
+
+1. 首选我们需要对 `getEndTemplate` 进行改造，将 redux 数据写入 TextArea 中
+```tsx
+export const getEndTemplate = ({ state }: any) => {
+  return `</div>
+  <div id="modal_root"></div>
+  <textarea
+    id="data-context"
+    style='display:none'
+    readonly
+  >${JSON.stringify(state)}</textarea>
+</body>
+</html>`
+}
+```
+这样服务端渲染完成后，redux 数据就会保存在 TextArea 中。
+
+2. 将 textarea 中的数据取出来，作为 redux 的初始化数据
+```tsx
+// client/index.tsx
+import React from "react"
+
+import { hydrateRoot } from "react-dom/client"
+
+import App from "../App"
+import getReduxStore from "../store"
+
+let payloadData = {}
+try {
+  const context: HTMLTextAreaElement | null = document.getElementById(
+    "data-context",
+  ) as HTMLTextAreaElement
+  payloadData = JSON.parse(context?.value?.trim?.() ? context?.value : "{}")
+} catch (e) {
+  console.log(e)
+}
+
+const store = getReduxStore(payloadData)
+hydrateRoot(
+  document.getElementById("root")!,
+  <App
+    store={store}
+    preloadedState={payloadData}
+  />,
+)
+```
+```tsx
+// store.ts
+import { configureStore, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import thunk from 'redux-thunk'
+
+export const rootSlice = createSlice({
+  name: 'root',
+  initialState: {
+    hello: true,
+  },
+  reducers: {
+    setHello: (state, action: PayloadAction<boolean>) => {
+      state.hello = action.payload
+    },
+  },
+})
+
+const rootReducer = {
+  root: rootSlice.reducer,
+}
+
+const getReduxStore = (defaultState: { [x: string]: any }) => {
+  return configureStore({
+    reducer: rootReducer,
+    middleware: [thunk],
+    devTools: false,
+    preloadedState: defaultState,
+  })
+}
+
+const initialState = getReduxStore({}).getState
+
+export type RootState = ReturnType<typeof initialState>
+
+export default getReduxStore
+```
+```tsx
+// App.tsx
+const App = ({
+  store,
+  preloadedState,
+}: {
+  store: any
+  preloadedState: { [x: string]: any }
+}) => {
+  return (
+      <Provider store={store} serverState={preloadedState || {}}>
+        <BrowserRouter>
+          {routes}
+        </BrowserRouter>
+      </Provider>
+  )
+}
+
+export default App
+```
+此时我们就实现了 redux 的注水、脱水。
+服务端中的 redux 数据会在客户端初始化时被取出来，作为 redux 的初始化数据。
+
+## 异步数据的服务端渲染
+我们通常会在组件初始化后去请求一个方法来获取当前一些状态信息。那么在一份代码执行两次的时候，就会造成一个方法请求了两次，还可能会有数据闪烁的情况出现，这时候我们可以在组件上挂载一个 fetchServerSideProps 方法,同时将方法写在路由属性上，在服务端匹配到当前路由时，即可拿到当前组件的 fetchServerSideProps 方法，
+
+1、在服务端请求后，将状态同步到 redux 中，这时在客户端在脱水后可以做一些判断，如果数据已经有了，就不再请求了。
+
+2、也可在 fetchServerSideProps 使用 react-query 的 prefetch, 实现 Render-as-you-fetch
+> 具体代码可去仓库查看：https://github.com/bowling00/playground/tree/ssr-02
+
+## 路由的按需渲染
+如何实现支持 SSR 的页面级 dynamic import?
+
+React 18 中 React.lazy 可以实现 dynamic import，结合 Suspense，就是 React 原生级别的支持 SSR 的 dynamic import。
+
+## SEO
+react-helmet 可以实现在服务端渲染时，动态修改 title、meta 等标签。
+
+## 总结
+SSR 是一个很大的话题，包括同构、流式渲染、store 注水 && 脱水、路由按需加载、SEO、CDN 部署等等...
+
+本文作为简单的入门。希望能帮助到你。
