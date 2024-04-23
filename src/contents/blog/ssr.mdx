@@ -201,7 +201,7 @@ import App from '../App';
 ReactDom.hydrate(<App />, document.getElementById('root'))
 ```
 然后通过 webpack 打包，将打包后的文件引入到 html 中。
->篇幅问题，下文中所有的代码都在这：https://github.com/bowling00/playground/tree/ssr-02
+>篇幅问题，下文中所有的代码都在这：https://github.com/bowling00/react-ssr
 
 ```html
 <html lang="zh-cn">
@@ -267,7 +267,7 @@ const app = new Koa();
 
 app.use(async (ctx) => {
     const html = renderToString(
-      <StaticRouter location={req.path} >
+      <StaticRouter location={ctx.path} >
         {Routes}
       </StaticRouter>
     );
@@ -681,7 +681,7 @@ export default App
 1、在服务端请求后，将状态同步到 redux 中，这时在客户端在脱水后可以做一些判断，如果数据已经有了，就不再请求了。
 
 2、也可在 fetchServerSideProps 使用 react-query 的 prefetch, 实现 Render-as-you-fetch
-> 具体代码可去仓库查看：https://github.com/bowling00/playground/tree/ssr-02
+> 具体代码可去仓库查看：https://github.com/bowling00/react-ssr
 
 ## 路由的按需渲染
 如何实现支持 SSR 的页面级 dynamic import?
@@ -695,3 +695,5 @@ react-helmet 可以实现在服务端渲染时，动态修改 title、meta 等�
 SSR 是一个很大的话题，包括同构、流式渲染、store 注水 && 脱水、路由按需加载、SEO、CDN 部署等等...
 
 本文作为简单的入门。希望能帮助到你。
+
+> 由于篇幅问题，本文只展示了主流程，还有很多工程化的问题也值得一看，[react-ssr](https://github.com/bowling00/react-ssr) 已满足一般 SSR 项目的开发。
