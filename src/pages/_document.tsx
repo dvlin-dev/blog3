@@ -31,6 +31,13 @@ class MyDocument extends Document {
             src='https://analytics.umami.is/script.js'
             data-domains='blog.dvlin.com'
           />
+        {/* metadata test */}
+          <meta name="twitter:card"  content="summary_large_image" />
+          <meta name="twitter:image" content="https://dvlin.oss-cn-beijing.aliyuncs.com/wegic-5-13-preview.png" />
+          <meta property="og:url"         content="https://pre.dvlin.com" />
+          <meta property="og:title"       content="dvlin" />
+          <meta property="og:description" content="dvlin blog" />
+          <meta property="og:image"       content="https://dvlin.oss-cn-beijing.aliyuncs.com/wegic-5-13-preview.png" />
         </Head>
         <body>
           <Main />
